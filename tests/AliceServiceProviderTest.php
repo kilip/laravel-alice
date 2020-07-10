@@ -13,7 +13,7 @@ class AliceServiceProviderTest extends BaseTestCase
 
     public function testDoctrineLoaderRegistered()
     {
-        $ob = app()->get('alice.doctrine');
+        $ob = app()->get('alice.loader');
 
         $this->assertIsObject($ob);
         $this->assertInstanceOf(DoctrineORMLoader::class, $ob);

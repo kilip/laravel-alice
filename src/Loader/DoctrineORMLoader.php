@@ -8,7 +8,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Kilip\Laravel\Alice\Util\FileLocatorInterface;
 use Nelmio\Alice\Loader\NativeLoader;
 
-class DoctrineORMLoader
+class DoctrineORMLoader implements LoaderInterface
 {
     /**
      * @var ManagerRegistry

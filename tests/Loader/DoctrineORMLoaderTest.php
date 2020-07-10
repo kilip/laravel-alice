@@ -73,7 +73,7 @@ class DoctrineORMLoaderTest extends BaseTestCase
         ]);
 
         /* @var \Kilip\Laravel\Alice\Loader\DoctrineORMLoader $loader */
-        $loader = app()->get('alice.doctrine');
+        $loader = app()->get('alice.loader');
         $loader->load();
 
         /* @var User[] $data */
@@ -88,20 +88,5 @@ class DoctrineORMLoaderTest extends BaseTestCase
         $data = $repo->findAll();
         $this->assertIsArray($data);
         $this->assertCount(1, $data);
-    }
-
-    /**
-     * @param string $name
-     * @return ObjectManager
-     */
-    protected function getEntityManager($name = null)
-    {
-        /* @var \Doctrine\Persistence\ManagerRegistry $registry */
-        $registry = $this->app->get('registry');
-
-        if(is_null($name)){
-            $name = $registry->getDefaultManagerName();
-        }
-        return $registry->getManager($name);
     }
 }
