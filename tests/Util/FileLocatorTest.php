@@ -40,19 +40,4 @@ class FileLocatorTest extends TestCase
         $fileLocator = new FileLocator();
         $fileLocator->addPaths('foo');
     }
-
-    public function testAddPathsWithUnwritableDir()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/foo" not writable./');
-
-        if(!is_dir($dir = sys_get_temp_dir().'/laravel-alice')){
-            mkdir($dir,0777, true);
-        }
-        if(!is_dir($fooDir = $dir.'/foo')){
-            mkdir($fooDir, 0000,true);
-        };
-        $fileLocator = new FileLocator();
-        $fileLocator->addPaths($fooDir);
-    }
 }
