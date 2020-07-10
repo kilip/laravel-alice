@@ -20,11 +20,41 @@ class FileLocator implements FileLocatorInterface
     /**
      * @var string[]
      */
-    private $paths;
+    private $paths = [];
 
     public function __construct(array $paths = [])
     {
-        $this->paths = $paths;
+        $this->addPaths($paths);
+    }
+
+    /**
+     * @param string|array $paths
+     */
+    public function addPaths($paths)
+    {
+        if(is_string($paths)){
+            $paths = [$paths];
+        }
+
+        foreach($paths as $path){
+            if(in_array($path,$this->paths)){
+                continue;
+            }
+            if(!is_dir($path)){
+                throw new \InvalidArgumentException(sprintf(
+                    'The directory "%s" not exists.',
+                    $path
+                ));
+            }
+            if(!is_writable($path)){
+                throw new \InvalidArgumentException(sprintf(
+                    'The directory "%s" not writable.',
+                    $path
+                ));
+            }
+
+            $this->paths[] = $path;
+        }
     }
 
     /**
@@ -42,6 +72,8 @@ class FileLocator implements FileLocatorInterface
             ->name('/.*\.(ya?ml|php)$/i');
 
         $files = $files->sort(function ($a, $b) {
+            $a = (string)$a;
+            $b = (string)$b;
             return strcasecmp($a, $b);
         });
 
