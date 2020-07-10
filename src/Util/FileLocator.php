@@ -40,19 +40,12 @@ class FileLocator implements FileLocatorInterface
             if(in_array($path,$this->paths)){
                 continue;
             }
-            if(!is_dir($path)){
+            if(!is_dir($path) || !is_writable($path)){
                 throw new \InvalidArgumentException(sprintf(
                     'The directory "%s" not exists.',
                     $path
                 ));
             }
-            if(!is_writable($path)){
-                throw new \InvalidArgumentException(sprintf(
-                    'The directory "%s" not writable.',
-                    $path
-                ));
-            }
-
             $this->paths[] = $path;
         }
     }
