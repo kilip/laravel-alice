@@ -1,22 +1,30 @@
 <?php
 
+/*
+ * This file is part of the Kilip Laravel Alice project.
+ *
+ * (c) Anthonius Munthi <https://itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Tests\Kilip\Laravel\Alice\Fixtures;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class Group
+ * Class Group.
  *
  * @ORM\Entity
  * @ORM\Table(name="user_group")
- *
- * @package Tests\Kilip\Laravel\Alice\Fixtures
  */
 class Group
 {
     /**
-     * @ORM\Id()
+     * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      *
@@ -27,21 +35,21 @@ class Group
     /**
      * @ORM\Column(name="name", type="string")
      *
-     * @var null|string
+     * @var string|null
      */
     private $name;
 
     /**
      * @ORM\Column(type="datetime")
      *
-     * @var null|\DateTime
+     * @var \DateTime|null
      */
     private $created;
 
     /**
      * @ORM\Column(type="datetime")
      *
-     * @var null|\DateTime
+     * @var \DateTime|null
      */
     private $updated;
 
@@ -63,11 +71,13 @@ class Group
 
     /**
      * @param string|null $name
+     *
      * @return Group
      */
-    public function setName(?string $name): Group
+    public function setName(?string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -81,11 +91,13 @@ class Group
 
     /**
      * @param \DateTime|null $created
+     *
      * @return Group
      */
-    public function setCreated(?\DateTime $created): Group
+    public function setCreated(?\DateTime $created): self
     {
         $this->created = $created;
+
         return $this;
     }
 
@@ -99,11 +111,13 @@ class Group
 
     /**
      * @param \DateTime|null $updated
+     *
      * @return Group
      */
-    public function setUpdated(?\DateTime $updated): Group
+    public function setUpdated(?\DateTime $updated): self
     {
         $this->updated = $updated;
+
         return $this;
     }
 }

@@ -1,60 +1,76 @@
 <?php
 
+/*
+ * This file is part of the Kilip Laravel Alice project.
+ *
+ * (c) Anthonius Munthi <https://itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Tests\Kilip\Laravel\Alice\Fixtures;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class User
+ * Class User.
+ *
  * @ORM\Entity
  * @ORM\Table(name="user")
- * @package Tests\Kilip\Laravel\Alice\Fixtures
  */
 class User
 {
     /**
-     * @ORM\Id()
-     * @ORM\Column(name="id",type="integer")
+     * @ORM\Id
+     * @ORM\Column(name="id", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      *
-     * @var integer
+     * @var int
      */
     private $id;
 
     /**
      * @ORM\Column(name="username", type="string")
-     * @var null|string
+     *
+     * @var string|null
      */
     private $username;
 
     /**
      * @ORM\Column(type="string")
-     * @var null|string
+     *
+     * @var string|null
      */
     private $fullname;
 
     /**
      * @ORM\Column(name="birth_date", type="date")
+     *
      * @var \DateTime
      */
     private $birthDate;
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     * @var null|string
+     *
+     * @var string|null
      */
     private $email;
 
     /**
-     * @ORM\Column(type="integer",nullable=true)
-     * @var integer
+     * @ORM\Column(type="integer", nullable=true)
+     *
+     * @var int
      */
     private $favoriteNumber;
 
     /**
      * @ORM\ManyToOne(targetEntity="Group", cascade={"persist"})
      * @ORM\JoinColumn(name="group_id", referencedColumnName="id")
+     *
      * @var Group
      */
     private $group;
@@ -77,11 +93,13 @@ class User
 
     /**
      * @param Group $group
+     *
      * @return User
      */
-    public function setGroup(Group $group): User
+    public function setGroup(Group $group): self
     {
         $this->group = $group;
+
         return $this;
     }
 
@@ -95,11 +113,13 @@ class User
 
     /**
      * @param string|null $username
+     *
      * @return User
      */
-    public function setUsername(?string $username): User
+    public function setUsername(?string $username): self
     {
         $this->username = $username;
+
         return $this;
     }
 
@@ -113,11 +133,13 @@ class User
 
     /**
      * @param string|null $fullname
+     *
      * @return User
      */
-    public function setFullname(?string $fullname): User
+    public function setFullname(?string $fullname): self
     {
         $this->fullname = $fullname;
+
         return $this;
     }
 
@@ -131,11 +153,13 @@ class User
 
     /**
      * @param \DateTime $birthDate
+     *
      * @return User
      */
-    public function setBirthDate(\DateTime $birthDate): User
+    public function setBirthDate(\DateTime $birthDate): self
     {
         $this->birthDate = $birthDate;
+
         return $this;
     }
 
@@ -149,11 +173,13 @@ class User
 
     /**
      * @param string|null $email
+     *
      * @return User
      */
-    public function setEmail(?string $email): User
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -166,12 +192,14 @@ class User
     }
 
     /**
-     * @param null|int $favoriteNumber
+     * @param int|null $favoriteNumber
+     *
      * @return User
      */
-    public function setFavoriteNumber($favoriteNumber): User
+    public function setFavoriteNumber($favoriteNumber): self
     {
         $this->favoriteNumber = $favoriteNumber;
+
         return $this;
     }
 }

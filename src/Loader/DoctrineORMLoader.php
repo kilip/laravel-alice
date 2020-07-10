@@ -1,8 +1,17 @@
 <?php
 
+/*
+ * This file is part of the Kilip Laravel Alice project.
+ *
+ * (c) Anthonius Munthi <https://itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Kilip\Laravel\Alice\Loader;
-
 
 use Doctrine\Persistence\ManagerRegistry;
 use Kilip\Laravel\Alice\Util\FileLocatorInterface;
@@ -32,9 +41,9 @@ class DoctrineORMLoader implements LoaderInterface
         $loader = new NativeLoader();
         $files = $locator->find();
 
-        /* @var \Nelmio\Alice\ObjectSet $objectSet */
+        /** @var \Nelmio\Alice\ObjectSet $objectSet */
         $objectSet = $loader->loadFiles($files);
-        foreach($objectSet->getObjects() as $object){
+        foreach ($objectSet->getObjects() as $object) {
             $this->persist($object);
         }
     }
@@ -42,7 +51,7 @@ class DoctrineORMLoader implements LoaderInterface
     private function persist($object)
     {
         $registry = $this->registry;
-        $em = $registry->getManagerForClass(get_class($object));
+        $em = $registry->getManagerForClass(\get_class($object));
 
         $em->persist($object);
         $em->flush();

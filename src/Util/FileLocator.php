@@ -1,8 +1,17 @@
 <?php
 
+/*
+ * This file is part of the Kilip Laravel Alice project.
+ *
+ * (c) Anthonius Munthi <https://itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Kilip\Laravel\Alice\Util;
-
 
 use Symfony\Component\Finder\Finder as SymfonyFinder;
 
@@ -13,13 +22,14 @@ class FileLocator implements FileLocatorInterface
      */
     private $paths;
 
-    public function __construct(array $paths=[])
+    public function __construct(array $paths = [])
     {
         $this->paths = $paths;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
+     *
      * @return array
      */
     public function find(): array
@@ -36,7 +46,7 @@ class FileLocator implements FileLocatorInterface
         });
 
         $fixtureFiles = [];
-        /* @var \Symfony\Component\Finder\SplFileInfo $file */
+        /** @var \Symfony\Component\Finder\SplFileInfo $file */
         foreach ($files as $file) {
             $fixtureFiles[$file->getRealPath()] = true;
         }

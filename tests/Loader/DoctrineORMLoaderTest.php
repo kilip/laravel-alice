@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of the Kilip Laravel Alice project.
+ *
+ * (c) Anthonius Munthi <https://itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace Tests\Kilip\Laravel\Alice\Loader;
 
 use Doctrine\Persistence\ManagerRegistry;
@@ -7,7 +18,6 @@ use Doctrine\Persistence\ObjectManager;
 use Kilip\Laravel\Alice\Loader\DoctrineORMLoader;
 use Kilip\Laravel\Alice\Testing\RefreshDatabaseTrait;
 use Kilip\Laravel\Alice\Util\FileLocatorInterface;
-use Nelmio\Alice\Loader\NativeLoader;
 use Tests\Kilip\Laravel\Alice\BaseTestCase;
 use Tests\Kilip\Laravel\Alice\Fixtures\Group;
 use Tests\Kilip\Laravel\Alice\Fixtures\User;
@@ -51,7 +61,7 @@ class DoctrineORMLoaderTest extends BaseTestCase
         $locator->expects($this->once())
             ->method('find')
             ->willReturn([
-                __DIR__.'/../Resources/fixtures/test-load/test.yml'
+                __DIR__.'/../Resources/fixtures/test-load/test.yml',
             ]);
         $registry->expects($this->exactly(11))
             ->method('getManagerForClass')
@@ -68,19 +78,19 @@ class DoctrineORMLoaderTest extends BaseTestCase
     public function testSuccessfullyLoad()
     {
         $this->refreshDatabase();
-        $this->app['config']->set('alice.paths',[
-            __DIR__.'/../Resources/fixtures/test-load'
+        $this->app['config']->set('alice.paths', [
+            __DIR__.'/../Resources/fixtures/test-load',
         ]);
 
-        /* @var \Kilip\Laravel\Alice\Loader\DoctrineORMLoader $loader */
+        /** @var \Kilip\Laravel\Alice\Loader\DoctrineORMLoader $loader */
         $loader = app()->get('alice.loader');
         $loader->load();
 
-        /* @var User[] $data */
+        /** @var User[] $data */
         $repo = $this->getEntityManager()->getRepository(User::class);
         $data = $repo->findAll();
         $this->assertIsArray($data);
-        $this->assertCount(10,$data);
+        $this->assertCount(10, $data);
         $this->assertInstanceOf(Group::class, $data[0]->getGroup());
 
         // group test
