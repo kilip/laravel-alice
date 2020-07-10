@@ -103,8 +103,10 @@ return PhpCsFixer\Config::create()
         ],
         'void_return' => false, // BC breaks; to be done in API Platform 3.0,
         'binary_operator_spaces' => [
-            'align_double_arrow' => true,
-            'align_equals' => true,
+            'operators' => [
+                '=' => 'align',
+                '=>' => 'align',
+            ]
         ],
     ])
     ->setFinder($finder);
