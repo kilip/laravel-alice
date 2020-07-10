@@ -49,10 +49,9 @@ jobs:
             composer-php${{ matrix.php }}-
             composer-
         continue-on-error: true
-      - name: Install PHP-CS-Fixer
+      - name: Update project dependencies
         run: |
-          composer global require --prefer-dist --no-progress --no-suggest --ansi \
-            friendsofphp/php-cs-fixer:"${PHP_CS_FIXER_VERSION}"
+          composer update --no-progress --no-suggest --ansi
       - name: Cache PHP-CS-Fixer results
         uses: actions/cache@v1
         with:
