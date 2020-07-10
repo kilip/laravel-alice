@@ -15,10 +15,19 @@ namespace Kilip\Laravel\Alice\Testing;
 
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\ToolsException;
+use Doctrine\Persistence\ManagerRegistry;
 
 trait RefreshDatabaseTrait
 {
-    public function refreshDatabase()
+    /**
+     * @return ManagerRegistry
+     */
+    protected function getRegistry()
+    {
+        return app()->get('registry');
+    }
+
+    protected function refreshDatabase()
     {
         /** @var \Doctrine\Persistence\ManagerRegistry $registry */
         $registry = app()->get('registry');

@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Tests\Kilip\Laravel\Alice\Loader;
 
-use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Persistence\ObjectManager;
 use Kilip\Laravel\Alice\Loader\DoctrineORMLoader;
 use Kilip\Laravel\Alice\Testing\RefreshDatabaseTrait;
 use Kilip\Laravel\Alice\Util\FileLocatorInterface;
@@ -41,10 +39,24 @@ class DoctrineORMLoaderTest extends BaseTestCase
      */
     private $locator;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject
+     */
+    private $manager;
+
     protected function setUp(): void
     {
         parent::setUp();
-        $this->registry = $this->getMockBuilder(ManagerRegistry::class)
+
+        $registryClass = 'Doctrine\\Persistence\\ManagerRegistry';
+        $omClass = 'Doctrine\\Persistence\\ObjectManager';
+        if(!interface_exists($omClass)){
+            $registryClass = 'Doctrine\\Common\\Persistence\\ManagerRegistry';
+            $omClass = 'Doctrine\\Common\\Persistence\\ObjectManager';
+        }
+
+        $this->manager = $this->getMockBuilder($omClass)->getMock();
+        $this->registry = $this->getMockBuilder($registryClass)
             ->getMock();
         $this->locator = $this->getMockBuilder(FileLocatorInterface::class)
             ->getMock();
@@ -53,10 +65,11 @@ class DoctrineORMLoaderTest extends BaseTestCase
 
     public function testLoad()
     {
+        $manager = $this->manager;
         $loader = $this->loader;
         $registry = $this->registry;
         $locator = $this->locator;
-        $manager = $this->createMock(ObjectManager::class);
+
 
         $locator->expects($this->once())
             ->method('find')
