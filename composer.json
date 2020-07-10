@@ -1,0 +1,40 @@
+{
+    "name": "kilip/laravel-alice",
+    "description": "Laravel Alice Integration",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Anthonius Munthi",
+            "email": "me@itstoni.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "Kilip\\Laravel\\Alice\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Kilip\\Laravel\\Alice\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=7.2",
+        "illuminate/support": "^5.8|^6.0|^7.0",
+        "psr/log": "^1.0",
+        "theofidry/alice-data-fixtures": "^1.0"
+    },
+    "require-dev": {
+        "doctrine/data-fixtures": "^1.2|^1.3|^1.4",
+        "doctrine/orm": "^2.6.6|^2.7",
+        "laravel-doctrine/orm": "^1.4.18|^1.5|^1.6",
+        "orchestra/testbench": "^3.8|^4.0|^5.0",
+        "phpunit/phpunit": "^8.5"
+    }
+}

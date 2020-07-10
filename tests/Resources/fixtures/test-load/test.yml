@@ -1,0 +1,14 @@
+Tests\Kilip\Laravel\Alice\Fixtures\User:
+  user{1..10}:
+    username: '<username()>'
+    fullname: '<firstName()> <lastName()>'
+    birthDate: '<date_create()>'
+    email: '<email()>'
+    favoriteNumber: '50%? <numberBetween(1, 200)>'
+    group: '@group1'
+
+Tests\Kilip\Laravel\Alice\Fixtures\Group:
+  group1:
+    name: Administrators
+    created: '<dateTimeBetween("-200 days", "now")>'
+    updated: '<dateTimeBetween($created, "now")>'
