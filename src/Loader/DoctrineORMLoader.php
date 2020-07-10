@@ -29,7 +29,13 @@ class DoctrineORMLoader implements LoaderInterface
      */
     private $locator;
 
-    public function __construct(ManagerRegistry $registry, FileLocatorInterface $locator)
+    /**
+     * DoctrineORMLoader constructor.
+     *
+     * @param ManagerRegistry      $registry
+     * @param FileLocatorInterface $locator
+     */
+    public function __construct($registry, FileLocatorInterface $locator)
     {
         $this->registry = $registry;
         $this->locator = $locator;
