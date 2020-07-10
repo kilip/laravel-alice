@@ -13,6 +13,6 @@ declare(strict_types=1);
 
 return [
     'locator' => 'alice.locator',
-    'loader' => 'alice.loader.doctrine',
-    'paths' => [],
+    'loader'  => 'alice.loader.doctrine',
+    'paths'   => [],
 ];

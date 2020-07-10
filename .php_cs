@@ -101,6 +101,10 @@ return PhpCsFixer\Config::create()
                 'property',
             ],
         ],
-        'void_return' => false, // BC breaks; to be done in API Platform 3.0
+        'void_return' => false, // BC breaks; to be done in API Platform 3.0,
+        'binary_operator_spaces' => [
+            'align_double_arrow' => true,
+            'align_equals' => true,
+        ],
     ])
     ->setFinder($finder);

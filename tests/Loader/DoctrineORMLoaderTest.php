@@ -48,28 +48,24 @@ class DoctrineORMLoaderTest extends BaseTestCase
     {
         parent::setUp();
 
-        $registryClass = 'Doctrine\\Persistence\\ManagerRegistry';
-        $omClass = 'Doctrine\\Persistence\\ObjectManager';
-        if(!interface_exists($omClass)){
+        $registryClass = 'Doctrine\\Common\\Persistence\\ManagerRegistry';
+        $omClass       = 'Doctrine\\Common\\Persistence\\ObjectManager';
+        if (!interface_exists($omClass)) {
             $registryClass = 'Doctrine\\Common\\Persistence\\ManagerRegistry';
-            $omClass = 'Doctrine\\Common\\Persistence\\ObjectManager';
+            $omClass       = 'Doctrine\\Common\\Persistence\\ObjectManager';
         }
-
-        $this->manager = $this->getMockBuilder($omClass)->getMock();
-        $this->registry = $this->getMockBuilder($registryClass)
-            ->getMock();
-        $this->locator = $this->getMockBuilder(FileLocatorInterface::class)
-            ->getMock();
-        $this->loader = new DoctrineORMLoader($this->registry, $this->locator);
+        $this->manager  = $this->getMockBuilder($omClass)->getMock();
+        $this->registry = $this->getMockBuilder($registryClass)->getMock();
+        $this->locator  = $this->getMockBuilder(FileLocatorInterface::class)->getMock();
+        $this->loader   = new DoctrineORMLoader($this->registry, $this->locator);
     }
 
     public function testLoad()
     {
-        $manager = $this->manager;
-        $loader = $this->loader;
+        $manager  = $this->manager;
+        $loader   = $this->loader;
         $registry = $this->registry;
-        $locator = $this->locator;
-
+        $locator  = $this->locator;
 
         $locator->expects($this->once())
             ->method('find')

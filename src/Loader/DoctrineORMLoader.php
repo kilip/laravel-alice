@@ -38,14 +38,14 @@ class DoctrineORMLoader implements LoaderInterface
     public function __construct($registry, FileLocatorInterface $locator)
     {
         $this->registry = $registry;
-        $this->locator = $locator;
+        $this->locator  = $locator;
     }
 
     public function load()
     {
         $locator = $this->locator;
-        $loader = new NativeLoader();
-        $files = $locator->find();
+        $loader  = new NativeLoader();
+        $files   = $locator->find();
 
         /** @var \Nelmio\Alice\ObjectSet $objectSet */
         $objectSet = $loader->loadFiles($files);
@@ -57,7 +57,7 @@ class DoctrineORMLoader implements LoaderInterface
     private function persist($object)
     {
         $registry = $this->registry;
-        $em = $registry->getManagerForClass(\get_class($object));
+        $em       = $registry->getManagerForClass(\get_class($object));
 
         $em->persist($object);
         $em->flush();
