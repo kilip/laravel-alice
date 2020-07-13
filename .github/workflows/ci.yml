@@ -68,7 +68,7 @@ jobs:
       - name: Run PHP-CS-Fixer fix
         run: |
           mkdir -p /var/cache/php-cs-fixer
-          ./vendor/bin/php-cs-fixer fix --dry-run --diff --cache-file=/var/cache/php-cs-fixer/.php_cs.cache --ansi
+          ./vendor/bin/php-cs-fixer fix --dry-run --diff --ansi
   phpstan:
     name: PHPStan (PHP ${{ matrix.php }})
     runs-on: ubuntu-latest
