@@ -1,8 +1,17 @@
 <?php
 
+/*
+ * This file is part of the Kilip Laravel Alice project.
+ *
+ * (c) Anthonius Munthi <https://itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Kilip\Laravel\Alice;
-
 
 use Fidry\AliceDataFixtures\Loader\SimpleLoader;
 use Illuminate\Contracts\Support\DeferrableProvider;
@@ -21,23 +30,22 @@ class AliceServiceProvider extends ServiceProvider implements DeferrableProvider
 
         $app->singleton(FileLocator::class, FileLocator::class);
 
-        $app->singleton(SimpleLoader::class, function(Application $app){
+        $app->singleton(SimpleLoader::class, function (Application $app) {
             $native = new NativeLoader();
             $logger = $app->get(LoggerInterface::class);
+
             return new SimpleLoader($native->getFilesLoader(), $logger);
         });
 
-        $app->singleton(DoctrineORMLoader::class, function(Application $app){
+        $app->singleton(DoctrineORMLoader::class, function (Application $app) {
             return new DoctrineORMLoader($app->get(SimpleLoader::class));
         });
 
-        $app->alias(DoctrineORMLoader::class,'alice.loaders.doctrine_orm');
-
+        $app->alias(DoctrineORMLoader::class, 'alice.loaders.doctrine_orm');
     }
 
     public function register()
     {
-
     }
 
     public function provides()

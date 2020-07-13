@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of the Kilip Laravel Alice project.
+ *
+ * (c) Anthonius Munthi <https://itstoni.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace Tests\Kilip\Laravel\Alice\Loader;
 
 use Kilip\Laravel\Alice\Loader\DoctrineORMLoader;
@@ -24,11 +35,11 @@ class DoctrineORMLoaderTest extends BaseTestCase
         $ob->getLocator()->addPaths(__DIR__.'/../Resources/fixtures/test-load');
         $ob->load();
 
-        $em = $this->getRegistry()->getManagerForClass(User::class);
+        $em   = $this->getRegistry()->getManagerForClass(User::class);
         $repo = $em->getRepository(User::class);
         $data = $repo->findAll();
 
-        $this->assertCount(10,$data);
+        $this->assertCount(10, $data);
     }
 
     /**

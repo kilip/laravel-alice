@@ -43,6 +43,6 @@
         "phpstan/phpstan": "^0.12.30",
         "phpstan/phpstan-doctrine": "^0.12.16",
         "phpstan/phpstan-phpunit": "^0.12.11",
-        "phpunit/phpunit": "^8.5"
+        "phpunit/phpunit": "^8.5.8"
     }
 }
