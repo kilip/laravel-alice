@@ -44,7 +44,7 @@ jobs:
       - name: Install Composer
         run: wget -qO - https://raw.githubusercontent.com/composer/getcomposer.org/$COMPOSER_INSTALLER_COMMIT/web/installer | php -- --install-dir=/usr/local/bin --filename=composer --quiet
       - name: Cache Composer packages
-        uses: actions/cache@v1only
+        uses: actions/cache@v1
         with:
           path: ~/.composer/cache
           key: composer-php${{ matrix.php }}-php-cs-fixer-${{ github.sha }}
@@ -68,7 +68,7 @@ jobs:
       - name: Run PHP-CS-Fixer fix
         run: |
           mkdir -p /var/cache/php-cs-fixer
-          ./vendor/bin/php-cs-fixer fix --dry-run --diff --cache-file=/var/cache/php-cs-fixer/.php_cs.cache --ansi
+          ./vendor/bin/php-cs-fixer fix --dry-run --diff --ansi
   phpstan:
     name: PHPStan (PHP ${{ matrix.php }})
     runs-on: ubuntu-latest
