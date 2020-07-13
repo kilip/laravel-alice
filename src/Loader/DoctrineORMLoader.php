@@ -30,11 +30,6 @@ class DoctrineORMLoader
     private $loader;
 
     /**
-     * @var string[]
-     */
-    private $paths = [];
-
-    /**
      * @var FileLocator
      */
     private $locator;
@@ -61,7 +56,7 @@ class DoctrineORMLoader
     private function configure(SimpleLoader $loader)
     {
         $paths     = config('alice.doctrine_orm.paths', []);
-        $purgeMode = config('alice.doctrine_orm.purge_mode', 'truncate');
+        $purgeMode = (string)config('alice.doctrine_orm.purge_mode', 'truncate');
         $om        = app()->get('em');
         $logger    = app()->get(LoggerInterface::class);
 
