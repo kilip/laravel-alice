@@ -24,6 +24,9 @@
             "Tests\\Kilip\\Laravel\\Alice\\": "tests/"
         }
     },
+    "scripts": {
+        "phpcs": "./vendor/bin/php-cs-fixer fix"
+    },
     "require": {
         "php": ">=7.2",
         "illuminate/support": "^5.8|^6.0|^7.0",
