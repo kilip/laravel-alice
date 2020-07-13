@@ -15,4 +15,10 @@ return [
     'locator' => 'alice.locator',
     'loader'  => 'alice.loader.doctrine',
     'paths'   => [],
+    'doctrine_orm' => [
+        'paths' => []
+    ],
+    'eloquent' => [
+        'paths' => []
+    ]
 ];
