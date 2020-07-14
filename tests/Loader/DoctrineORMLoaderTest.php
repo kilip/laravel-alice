@@ -16,6 +16,7 @@ namespace Tests\Kilip\Laravel\Alice\Loader;
 use Kilip\Laravel\Alice\Loader\DoctrineORMLoader;
 use Kilip\Laravel\Alice\Testing\ORM\RefreshDatabaseTrait;
 use Tests\Kilip\Laravel\Alice\BaseTestCase;
+use Tests\Kilip\Laravel\Alice\Fixtures\Group;
 use Tests\Kilip\Laravel\Alice\Fixtures\User;
 
 class DoctrineORMLoaderTest extends BaseTestCase
@@ -36,15 +37,29 @@ class DoctrineORMLoaderTest extends BaseTestCase
 
     public function testLoad()
     {
+        $this->app['config']->set('alice.doctrine_orm.default.paths', [__DIR__.'/../Resources/fixtures/test-load']);
         $ob = $this->getLoader();
-        $ob->getLocator()->addPaths(__DIR__.'/../Resources/fixtures/test-load');
         $ob->load();
 
-        $em   = $this->getRegistry()->getManagerForClass(User::class);
-        $repo = $em->getRepository(User::class);
-        $data = $repo->findAll();
+        $users  = $this->getUserRepository()->findAll();
+        $groups = $this->getGroupRepository()->findAll();
 
-        $this->assertCount(10, $data);
+        $this->assertCount(10, $users);
+        $this->assertCount(1, $groups);
+    }
+
+    public function testLoadWhenDevOnly()
+    {
+        $this->app['config']->set('app.env', 'production');
+        $this->app['config']->set('alice.doctrine_orm.default.paths', [__DIR__.'/../Resources/fixtures/test-load']);
+        $ob = $this->getLoader();
+        $ob->load();
+
+        $users  = $this->getUserRepository()->findAll();
+        $groups = $this->getGroupRepository()->findAll();
+
+        $this->assertCount(0, $users);
+        $this->assertCount(0, $groups);
     }
 
     /**
@@ -53,5 +68,27 @@ class DoctrineORMLoaderTest extends BaseTestCase
     private function getLoader()
     {
         return $this->app->get(DoctrineORMLoader::class);
+    }
+
+    /**
+     * @return \Doctrine\Persistence\ObjectRepository
+     */
+    protected function getGroupRepository()
+    {
+        return $this
+            ->getRegistry()
+            ->getManagerForClass(Group::class)
+            ->getRepository(Group::class);
+    }
+
+    /**
+     * @return \Doctrine\Persistence\ObjectRepository
+     */
+    protected function getUserRepository()
+    {
+        return $this
+            ->getRegistry()
+            ->getManagerForClass(User::class)
+            ->getRepository(User::class);
     }
 }

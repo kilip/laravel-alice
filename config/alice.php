@@ -17,7 +17,7 @@ return [
     'paths'        => [],
     'doctrine_orm' => [
         'default' => [
-            'purge_mode' => 'delete',
+            'purge_mode' => 'truncate',
             'paths'      => [],
         ],
     ],

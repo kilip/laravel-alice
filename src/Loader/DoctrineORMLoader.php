@@ -13,57 +13,107 @@ declare(strict_types=1);
 
 namespace Kilip\Laravel\Alice\Loader;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 use Fidry\AliceDataFixtures\Bridge\Doctrine\Persister\ObjectManagerPersister;
-use Fidry\AliceDataFixtures\Bridge\Doctrine\Purger\Purger;
+use Fidry\AliceDataFixtures\Bridge\Doctrine\Purger\Purger as DoctrinePurger;
 use Fidry\AliceDataFixtures\Loader\PersisterLoader;
 use Fidry\AliceDataFixtures\Loader\PurgerLoader;
 use Fidry\AliceDataFixtures\Loader\SimpleLoader;
+use Fidry\AliceDataFixtures\LoaderInterface;
+use Fidry\AliceDataFixtures\Persistence\PersisterAwareInterface;
+use Fidry\AliceDataFixtures\Persistence\PersisterInterface;
+use Fidry\AliceDataFixtures\Persistence\PurgeMode;
 use Kilip\Laravel\Alice\Util\FileLocator;
 use Psr\Log\LoggerInterface;
 
 class DoctrineORMLoader implements FixturesLoaderInterface
 {
     /**
-     * @var PurgerLoader
+     * @var LoaderInterface|PersisterAwareInterface
      */
     private $loader;
 
     /**
-     * @var FileLocator
+     * @var array
      */
-    private $locator;
-
-    public function __construct(SimpleLoader $loader)
-    {
-        $this->configure($loader);
-    }
+    private $configs = [];
 
     /**
-     * @return FileLocator
+     * @var LoggerInterface
      */
-    public function getLocator(): FileLocator
+    private $logger;
+
+    /**
+     * @var \Doctrine\Persistence\ManagerRegistry
+     */
+    private $registry;
+
+    public function __construct(SimpleLoader $simpleLoader, LoggerInterface $logger)
     {
-        return $this->locator;
+        $manager         = app()->get('em');
+        $omPersister     = new ObjectManagerPersister($manager);
+        $purgerFactory   = new DoctrinePurger($manager, PurgeMode::createTruncateMode());
+        $persisterLoader = new PersisterLoader($simpleLoader, $omPersister, $logger);
+
+        $this->loader   = new PurgerLoader($persisterLoader, $purgerFactory, 'truncate', $logger);
+        $this->configs  = config('alice.doctrine_orm');
+        $this->logger   = $logger;
+        $this->registry = app()->get('registry');
     }
 
     public function load(string $purgeMode=null)
     {
-        $files = $this->locator->find();
-        $this->loader->load($files, [], [], $purgeMode);
+        $configs  = $this->configs;
+        $registry = $this->registry;
+        $objects  = [];
+        $env      = config('app.env');
+
+        foreach ($configs as $name => $config) {
+            $devOnly = $config['dev_only'] ?? true;
+            if ('production' === $env && $devOnly) {
+                continue;
+            }
+            $managerName = $config['manager'] ?? $name;
+            $purgeMode   = $config['purge_mode'] ?? 'truncate';
+            $purgeMode   = $this->createPurgeMode($purgeMode);
+            $om          = $registry->getManager($managerName);
+            $persister   = $this->createPersister($om);
+            $locator     = new FileLocator($config['paths']);
+            $files       = $locator->find();
+            $loader      = $this->loader->withPersister($persister);
+            $objects     = array_merge(
+                $objects,
+                $loader->load($files, [], [], $purgeMode)
+            );
+        }
+
+        return $objects;
     }
 
-    private function configure(SimpleLoader $loader)
+    /**
+     * @param EntityManagerInterface|ObjectManager $entityManager
+     *
+     * @return PersisterInterface
+     */
+    private function createPersister(EntityManagerInterface $entityManager): PersisterInterface
     {
-        $paths     = config('alice.doctrine_orm.paths', []);
-        $purgeMode = (string) config('alice.doctrine_orm.purge_mode', 'truncate');
-        $om        = app()->get('em');
-        $logger    = app()->get(LoggerInterface::class);
+        return new ObjectManagerPersister($entityManager);
+    }
 
-        $omPersister = new ObjectManagerPersister($om);
-        $persister   = new PersisterLoader($loader, $omPersister, $logger);
-        $purger      = new Purger($om);
+    /**
+     * @param string $mode
+     *
+     * @return PurgeMode
+     */
+    private function createPurgeMode($mode)
+    {
+        $map = [
+            'no_purge' => 0,
+            'delete'   => 1,
+            'truncate' => 2,
+        ];
 
-        $this->loader  = new PurgerLoader($persister, $purger, $purgeMode, $logger);
-        $this->locator = new FileLocator($paths);
+        return new PurgeMode($map[$mode]);
     }
 }
