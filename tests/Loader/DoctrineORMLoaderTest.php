@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Tests\Kilip\Laravel\Alice\Loader;
 
 use Kilip\Laravel\Alice\Loader\DoctrineORMLoader;
-use Kilip\Laravel\Alice\Testing\RefreshDatabaseTrait;
+use Kilip\Laravel\Alice\Testing\ORM\RefreshDatabaseTrait;
 use Tests\Kilip\Laravel\Alice\BaseTestCase;
 use Tests\Kilip\Laravel\Alice\Fixtures\User;
 
@@ -27,6 +27,11 @@ class DoctrineORMLoaderTest extends BaseTestCase
         parent::setUp();
 
         $this->refreshDatabase();
+    }
+
+    public function testDefaultConfig()
+    {
+        $this->assertEquals('truncate', config('alice.doctrine_orm.default.purge_mode'));
     }
 
     public function testLoad()

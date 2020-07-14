@@ -16,9 +16,15 @@ return [
     'loader'       => 'alice.loader.doctrine',
     'paths'        => [],
     'doctrine_orm' => [
-        'paths' => [],
+        'default' => [
+            'purge_mode' => 'delete',
+            'paths'      => [],
+        ],
     ],
     'eloquent' => [
-        'paths' => [],
+        'default' => [
+            'purge_mode' => 'delete',
+            'paths'      => [],
+        ],
     ],
 ];

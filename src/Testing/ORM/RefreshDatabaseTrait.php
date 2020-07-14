@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Kilip\Laravel\Alice\Testing;
+namespace Kilip\Laravel\Alice\Testing\ORM;
 
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\ToolsException;

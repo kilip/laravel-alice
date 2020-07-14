@@ -18,11 +18,10 @@ use Fidry\AliceDataFixtures\Bridge\Doctrine\Purger\Purger;
 use Fidry\AliceDataFixtures\Loader\PersisterLoader;
 use Fidry\AliceDataFixtures\Loader\PurgerLoader;
 use Fidry\AliceDataFixtures\Loader\SimpleLoader;
-use Fidry\AliceDataFixtures\Persistence\PurgeMode;
 use Kilip\Laravel\Alice\Util\FileLocator;
 use Psr\Log\LoggerInterface;
 
-class DoctrineORMLoader
+class DoctrineORMLoader implements FixturesLoaderInterface
 {
     /**
      * @var PurgerLoader
@@ -47,16 +46,16 @@ class DoctrineORMLoader
         return $this->locator;
     }
 
-    public function load()
+    public function load(string $purgeMode=null)
     {
         $files = $this->locator->find();
-        $this->loader->load($files, [], [], PurgeMode::createTruncateMode());
+        $this->loader->load($files, [], [], $purgeMode);
     }
 
     private function configure(SimpleLoader $loader)
     {
         $paths     = config('alice.doctrine_orm.paths', []);
-        $purgeMode = (string)config('alice.doctrine_orm.purge_mode', 'truncate');
+        $purgeMode = (string) config('alice.doctrine_orm.purge_mode', 'truncate');
         $om        = app()->get('em');
         $logger    = app()->get(LoggerInterface::class);
 

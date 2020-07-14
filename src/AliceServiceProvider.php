@@ -18,6 +18,7 @@ use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Kilip\Laravel\Alice\Loader\DoctrineORMLoader;
+use Kilip\Laravel\Alice\Loader\EloquentLoader;
 use Kilip\Laravel\Alice\Util\FileLocator;
 use Nelmio\Alice\Loader\NativeLoader;
 use Psr\Log\LoggerInterface;
@@ -28,6 +29,9 @@ class AliceServiceProvider extends ServiceProvider implements DeferrableProvider
     {
         $app = $this->app;
 
+        $this->publishes([
+            __DIR__.'/../config/alice.php' => config_path('alice.php'),
+        ]);
         $app->singleton(FileLocator::class, FileLocator::class);
 
         $app->singleton(SimpleLoader::class, function (Application $app) {
@@ -37,21 +41,27 @@ class AliceServiceProvider extends ServiceProvider implements DeferrableProvider
             return new SimpleLoader($native->getFilesLoader(), $logger);
         });
 
-        $app->singleton(DoctrineORMLoader::class, function (Application $app) {
-            return new DoctrineORMLoader($app->get(SimpleLoader::class));
-        });
-
+        $app->singleton(DoctrineORMLoader::class, DoctrineORMLoader::class);
         $app->alias(DoctrineORMLoader::class, 'alice.loaders.doctrine_orm');
+
+        $app->singleton(EloquentLoader::class, EloquentLoader::class);
+        $app->alias(EloquentLoader::class, 'alice.loaders.eloquent');
     }
 
     public function register()
     {
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/alice.php', 'alice'
+        );
     }
 
     public function provides()
     {
         return [
+            FileLocator::class,
+            SimpleLoader::class,
             DoctrineORMLoader::class,
+            EloquentLoader::class,
         ];
     }
 }
