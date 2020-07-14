@@ -13,18 +13,26 @@ declare(strict_types=1);
 
 namespace Tests\Kilip\Laravel\Alice;
 
+use Illuminate\Contracts\Support\DeferrableProvider;
+use Kilip\Laravel\Alice\AliceServiceProvider;
 use Kilip\Laravel\Alice\Loader\DoctrineORMLoader;
-use Kilip\Laravel\Alice\Testing\RefreshDatabaseTrait;
+use Kilip\Laravel\Alice\Util\FileLocator;
 
 class AliceServiceProviderTest extends BaseTestCase
 {
-    use RefreshDatabaseTrait;
-
-    public function testDoctrineLoaderRegistered()
+    public function testProvides()
     {
-        $ob = app()->get('alice.loader');
+        $provider = $this->app->getProvider(AliceServiceProvider::class);
 
-        $this->assertIsObject($ob);
-        $this->assertInstanceOf(DoctrineORMLoader::class, $ob);
+        $this->assertInstanceOf(DeferrableProvider::class, $provider);
+
+        $provides = $provider->provides();
+        $this->assertContains(FileLocator::class, $provides);
+    }
+
+    public function testLoadDoctrineORMLoader()
+    {
+        $loader = $this->app->get('alice.loaders.doctrine_orm');
+        $this->assertInstanceOf(DoctrineORMLoader::class, $loader);
     }
 }

@@ -12,7 +12,19 @@
 declare(strict_types=1);
 
 return [
-    'locator' => 'alice.locator',
-    'loader'  => 'alice.loader.doctrine',
-    'paths'   => [],
+    'locator'      => 'alice.locator',
+    'loader'       => 'alice.loader.doctrine',
+    'paths'        => [],
+    'doctrine_orm' => [
+        'default' => [
+            'purge_mode' => 'truncate',
+            'paths'      => [],
+        ],
+    ],
+    'eloquent' => [
+        'default' => [
+            'purge_mode' => 'delete',
+            'paths'      => [],
+        ],
+    ],
 ];

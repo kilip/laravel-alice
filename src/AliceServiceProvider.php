@@ -13,48 +13,55 @@ declare(strict_types=1);
 
 namespace Kilip\Laravel\Alice;
 
+use Fidry\AliceDataFixtures\Loader\SimpleLoader;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Kilip\Laravel\Alice\Loader\DoctrineORMLoader;
-use Kilip\Laravel\Alice\Loader\LoaderInterface;
+use Kilip\Laravel\Alice\Loader\EloquentLoader;
 use Kilip\Laravel\Alice\Util\FileLocator;
-use Kilip\Laravel\Alice\Util\FileLocatorInterface;
+use Nelmio\Alice\Loader\NativeLoader;
+use Psr\Log\LoggerInterface;
 
-class AliceServiceProvider extends ServiceProvider
+class AliceServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     public function boot()
     {
+        $app = $this->app;
+
         $this->publishes([
             __DIR__.'/../config/alice.php' => config_path('alice.php'),
         ]);
-        $app = $this->app;
+        $app->singleton(FileLocator::class, FileLocator::class);
 
-        $app->bind(FileLocatorInterface::class, function (Application $app) {
-            $paths = config('alice.paths', []);
+        $app->singleton(SimpleLoader::class, function (Application $app) {
+            $native = new NativeLoader();
+            $logger = $app->get(LoggerInterface::class);
 
-            return new FileLocator($paths);
+            return new SimpleLoader($native->getFilesLoader(), $logger);
         });
-        $app->alias(FileLocatorInterface::class, 'alice.locator');
 
-        $app->bind(DoctrineORMLoader::class, function (Application $app) {
-            $locatorName = config('alice.locator', 'alice.locator');
-            $registry = $app->get('registry');
-            $locator = $app->get($locatorName);
+        $app->singleton(DoctrineORMLoader::class, DoctrineORMLoader::class);
+        $app->alias(DoctrineORMLoader::class, 'alice.loaders.doctrine_orm');
 
-            return new DoctrineORMLoader($registry, $locator);
-        });
-        $app->alias(DoctrineORMLoader::class, 'alice.loader.doctrine');
-
-        $app->bind(LoaderInterface::class, function (Application $app) {
-            $loaderName = config('alice.loader', 'alice.loader.doctrine');
-
-            return $app->get($loaderName);
-        });
-        $app->alias(LoaderInterface::class, 'alice.loader');
+        $app->singleton(EloquentLoader::class, EloquentLoader::class);
+        $app->alias(EloquentLoader::class, 'alice.loaders.eloquent');
     }
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/alice.php', 'alice');
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/alice.php', 'alice'
+        );
+    }
+
+    public function provides()
+    {
+        return [
+            FileLocator::class,
+            SimpleLoader::class,
+            DoctrineORMLoader::class,
+            EloquentLoader::class,
+        ];
     }
 }

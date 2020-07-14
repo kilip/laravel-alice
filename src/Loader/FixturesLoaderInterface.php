@@ -13,12 +13,11 @@ declare(strict_types=1);
 
 namespace Kilip\Laravel\Alice\Loader;
 
-interface LoaderInterface
+interface FixturesLoaderInterface
 {
-    /**
-     * Load fixtures.
-     *
-     * @return void
-     */
-    public function load();
+    public const NO_PURGE_MODE = 'no_purge';
+    public const DELETE        = 'delete';
+    public const TRUNCATE      = 'truncate';
+
+    public function load(string $purgeMode=null);
 }
