@@ -26,8 +26,7 @@ class DoctrineORMLoaderTest extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->refreshDatabase();
+        $this->app['config']->set('alice.doctrine_orm.default.paths', [__DIR__.'/../Resources/fixtures/test-load']);
     }
 
     public function testDefaultConfig()
@@ -37,7 +36,7 @@ class DoctrineORMLoaderTest extends BaseTestCase
 
     public function testLoad()
     {
-        $this->app['config']->set('alice.doctrine_orm.default.paths', [__DIR__.'/../Resources/fixtures/test-load']);
+        $this->refreshDatabase();
         $ob = $this->getLoader();
         $ob->load();
 
@@ -51,9 +50,7 @@ class DoctrineORMLoaderTest extends BaseTestCase
     public function testLoadWhenDevOnly()
     {
         $this->app['config']->set('app.env', 'production');
-        $this->app['config']->set('alice.doctrine_orm.default.paths', [__DIR__.'/../Resources/fixtures/test-load']);
-        $ob = $this->getLoader();
-        $ob->load();
+        $this->refreshDatabase();
 
         $users  = $this->getUserRepository()->findAll();
         $groups = $this->getGroupRepository()->findAll();

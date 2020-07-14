@@ -15,12 +15,15 @@ namespace Kilip\Laravel\Alice\Testing\ORM;
 
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\ToolsException;
-use Doctrine\Persistence\ManagerRegistry;
+use Kilip\Laravel\Alice\Loader\DoctrineORMLoader;
+use LaravelDoctrine\ORM\IlluminateRegistry;
 
 trait RefreshDatabaseTrait
 {
+    protected $dbPopulated = false;
+
     /**
-     * @return ManagerRegistry
+     * @return IlluminateRegistry
      */
     protected function getRegistry()
     {
@@ -29,20 +32,26 @@ trait RefreshDatabaseTrait
 
     protected function refreshDatabase()
     {
-        /** @var \Doctrine\Persistence\ManagerRegistry $registry */
-        $registry  = app()->get('registry');
+        /** @var \Doctrine\ORM\EntityManagerInterface[] $managers */
+        $registry  = $this->getRegistry();
         $managers  = $registry->getManagers();
-        $tool      = new SchemaTool($registry->getManager());
-        $metadatas = [];
         foreach ($managers as $manager) {
-            $metadatas = array_merge($metadatas, $manager->getMetadataFactory()->getAllMetadata());
+            try {
+                $tool     = new SchemaTool($manager);
+                $metadata = $manager->getMetadataFactory()->getAllMetadata();
+                $tool->dropSchema($metadata);
+                $tool->createSchema($metadata);
+            } catch (ToolsException $e) {
+                throw new \InvalidArgumentException(sprintf('Can not recreate database: %s', $e->getMessage()), $e->getCode(), $e);
+            }
         }
+        $this->populateDatabase();
+    }
 
-        try {
-            $tool->dropSchema($metadatas);
-            $tool->createSchema($metadatas);
-        } catch (ToolsException $e) {
-            throw new \InvalidArgumentException(sprintf('Can not recreate database: %s', $e->getMessage()), $e->getCode(), $e);
-        }
+    protected function populateDatabase()
+    {
+        $loader = app()->get(DoctrineORMLoader::class);
+        $loader->load();
+        $this->dbPopulated = true;
     }
 }
