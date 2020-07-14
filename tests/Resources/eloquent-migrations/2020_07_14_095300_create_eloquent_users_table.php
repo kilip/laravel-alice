@@ -15,7 +15,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsersTable extends Migration
+class CreateEloquentUsersTable extends Migration
 {
     public const TABLE_NAME = 'eloquent_users';
 
@@ -27,7 +27,7 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create(static::TABLE_NAME, function (Blueprint $table) {
-            $table->id();
+            $table->integer('id');
             $table->string('username');
             $table->string('fullname');
             $table->date('birthdate');
@@ -35,6 +35,7 @@ class CreateUsersTable extends Migration
             $table->integer('favoriteNumber')->nullable(true);
             $table->integer('id_group');
             $table->timestamps();
+            $table->primary('id');
         });
     }
 

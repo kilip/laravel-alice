@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Kilip\Laravel\Alice\Loader;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectManager;
 use Fidry\AliceDataFixtures\Bridge\Doctrine\Persister\ObjectManagerPersister;
 use Fidry\AliceDataFixtures\Bridge\Doctrine\Purger\Purger as DoctrinePurger;
 use Fidry\AliceDataFixtures\Loader\PersisterLoader;
@@ -25,6 +23,7 @@ use Fidry\AliceDataFixtures\Persistence\PersisterAwareInterface;
 use Fidry\AliceDataFixtures\Persistence\PersisterInterface;
 use Fidry\AliceDataFixtures\Persistence\PurgeMode;
 use Kilip\Laravel\Alice\Util\FileLocator;
+use LaravelDoctrine\ORM\IlluminateRegistry;
 use Psr\Log\LoggerInterface;
 
 class DoctrineORMLoader implements FixturesLoaderInterface
@@ -45,7 +44,7 @@ class DoctrineORMLoader implements FixturesLoaderInterface
     private $logger;
 
     /**
-     * @var \Doctrine\Persistence\ManagerRegistry
+     * @var IlluminateRegistry
      */
     private $registry;
 
@@ -92,11 +91,11 @@ class DoctrineORMLoader implements FixturesLoaderInterface
     }
 
     /**
-     * @param EntityManagerInterface|ObjectManager $entityManager
+     * @param mixed $entityManager
      *
      * @return PersisterInterface
      */
-    private function createPersister(EntityManagerInterface $entityManager): PersisterInterface
+    private function createPersister($entityManager): PersisterInterface
     {
         return new ObjectManagerPersister($entityManager);
     }

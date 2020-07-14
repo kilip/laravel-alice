@@ -25,7 +25,8 @@
         }
     },
     "scripts": {
-        "phpcs": "./vendor/bin/php-cs-fixer fix"
+        "phpcs": "./vendor/bin/php-cs-fixer fix",
+        "phpstan": "./vendor/bin/phpstan analyse --ansi"
     },
     "require": {
         "php": ">=7.2",

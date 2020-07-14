@@ -23,8 +23,11 @@ class EloquentLoaderTest extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->loadMigrationsFrom(__DIR__.'/../Resources/eloquent-migrations');
+        //$this->loadMigrationsFrom([__DIR__.'/../Resources/eloquent-migrations']);
+        $this->artisan('migrate', [
+            '--path'     => __DIR__.'/../Resources/eloquent-migrations',
+            '--realpath' => true,
+        ]);
     }
 
     public function testLoad()

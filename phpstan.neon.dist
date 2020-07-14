@@ -6,3 +6,5 @@ parameters:
 	earlyTerminatingMethodCalls:
 		PHPUnit\Framework\Constraint\Constraint:
 			- fail
+	ignoreErrors:
+	    - '#undefined method Fidry\\AliceDataFixtures\\Persistence\\PersisterAwareInterface::load()#'
