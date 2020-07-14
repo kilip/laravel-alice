@@ -50,7 +50,7 @@ trait RefreshDatabaseTrait
 
     protected function populateDatabase()
     {
-        if(!$this->dbPopulated){
+        if (!$this->dbPopulated) {
             $loader = app()->get(DoctrineORMLoader::class);
             $loader->load();
             $this->dbPopulated = true;
