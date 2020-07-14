@@ -24,13 +24,16 @@
             "Tests\\Kilip\\Laravel\\Alice\\": "tests/"
         }
     },
+    "conflict": {
+        "symfony/console": "<4.3"
+    },
     "scripts": {
         "phpcs": "./vendor/bin/php-cs-fixer fix",
         "phpstan": "./vendor/bin/phpstan analyse --ansi"
     },
     "require": {
         "php": ">=7.2",
-        "illuminate/support": "^5.8|^6.0|^7.0",
+        "illuminate/support": "^5.8.38|^6.0|^7.0",
         "psr/log": "^1.0",
         "theofidry/alice-data-fixtures": "^1.0.1|^1.1|^1.2"
     },
